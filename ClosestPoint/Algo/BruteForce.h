@@ -17,7 +17,11 @@ public:
 
 	void CalculateClosestPoints();
 
+	pair<Point, Point> GetShortestRelativePoints() { return _shortestRelativePoints; };
+
 private:
+	pair<Point, Point> _shortestRelativePoints;
+
 	int _num_points;
 	Point* _points;
 };

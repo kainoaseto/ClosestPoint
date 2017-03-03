@@ -9,6 +9,8 @@
 #include <string>
 #include <iostream>
 #include <time.h>
+#include <algorithm>
+#include <stack>
 
 using namespace std;
 

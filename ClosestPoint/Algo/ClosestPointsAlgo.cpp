@@ -22,7 +22,6 @@ void ClosestPointsAlgo::PrintResults()
 {
 	Point firstPoint = _points[_shortest_distance_point_idxs.first];
 	Point secondPoint = _points[_shortest_distance_point_idxs.second];
-	cout << "#########################################################################" << endl;;
 	cout << _name << endl;
 	cout << "The smallest distance is " << _shortest_distance
 		<< " --> " << "P" << _shortest_distance_point_idxs.first

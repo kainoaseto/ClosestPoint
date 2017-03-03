@@ -10,7 +10,7 @@
 // Point Struct with helper function
 struct Point
 {
-	int x, y;
+	int x, y, idx;
 
 	Point(int x = 0, int y = 0)
 	{
@@ -25,6 +25,21 @@ struct Point
                 static_cast<float>(pow(point->y - this->y, 2))
         );
     };
+
+	void PrintPoints(Point* points, int numPoints)
+	{
+		cout << "Points[" << numPoints << "]" << endl;
+		for (int i = 0; i < numPoints; i++)
+		{
+			cout << "[" << points[i].x << ", " << points[i].y << "]";
+			if (i + 1 < numPoints)
+				cout << ", ";
+			if (i != 0 && (i % 6 == 0))
+				cout << endl;
+
+		}
+		cout << endl;
+	}
 };
 
 
@@ -38,10 +53,10 @@ class ClosestPointsAlgo
 
 public:
 	ClosestPointsAlgo(int numPoints, Point* points = NULL);
-	virtual ~ClosestPointsAlgo() { delete[] _points; };
+	virtual ~ClosestPointsAlgo() {};
 
 	// Prints the results from the private vars below that need to be set
-    void PrintResults();
+    virtual void PrintResults();
 
     // Pure Virtual that needs to be implemented by the algorithm
     virtual void CalculateClosestPoints() = 0;

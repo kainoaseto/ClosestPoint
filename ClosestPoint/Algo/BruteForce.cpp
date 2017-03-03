@@ -26,6 +26,7 @@ void BruteForce::CalculateClosestPoints()
 			{
 				shortestDist = _points[i].distance(&_points[j]);
 				shortestIdxs = make_pair(i, j);
+				_shortestRelativePoints = make_pair(_points[i], _points[j]);
 			}
 			numCalcs++;
 		}
