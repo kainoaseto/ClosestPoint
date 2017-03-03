@@ -12,10 +12,15 @@ BruteForce::BruteForce(int numPoints, Point* points)
 	_points = GetPoints();
 }
 
+void BruteForce::PopulateIdxs()
+{
+	for (int i = 0; i < _num_points; i++)
+		_points[i].idx = i;
+}
+
 void BruteForce::CalculateClosestPoints()
 {
 	float shortestDist = FLT_MAX;
-	pair<int, int> shortestIdxs;
 	int numCalcs = 0;
 
 	for (int i = 0; i < _num_points; i++)
@@ -25,7 +30,6 @@ void BruteForce::CalculateClosestPoints()
 			if (_points[i].distance(&_points[j]) < shortestDist)
 			{
 				shortestDist = _points[i].distance(&_points[j]);
-				shortestIdxs = make_pair(i, j);
 				_shortestRelativePoints = make_pair(_points[i], _points[j]);
 			}
 			numCalcs++;
@@ -33,6 +37,6 @@ void BruteForce::CalculateClosestPoints()
 	}
 
 	SetNumCalculations(numCalcs);
-	SetShortestPointIdxs(shortestIdxs);
+	SetShortestPoints(_shortestRelativePoints);
 	SetShortestDistance(shortestDist);
 }

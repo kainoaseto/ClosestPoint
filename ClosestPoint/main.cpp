@@ -45,12 +45,12 @@ int main()
 
 	cout << "#########################Closest Points Analysis#########################" << endl;
 	
-	/*Analysis(points_set_one, 6);
+	Analysis(points_set_one, 6);
 	Analysis(points_set_two, 6);
 	Analysis(points_set_three, 6);
-	Analysis(points_set_four, 6);*/
+	Analysis(points_set_four, 6);
 	Analysis(NULL, 100);
-	//Analysis(NULL, 1000);
+	Analysis(NULL, 1000);
 		
     return 0;
 }
@@ -63,7 +63,7 @@ void Analysis(Point* points, int numPoints)
 		points = cpBruteForce.GetPoints();
 
 	points->PrintPoints(points, numPoints);
-
+	cpBruteForce.PopulateIdxs();
 	cpBruteForce.CalculateClosestPoints();
 	cpBruteForce.PrintResults();
 

@@ -19,13 +19,11 @@ public:
 	void PrintResults();
 
 private:
-	pair<Point, Point> closest_points_recursive(Point* points, int numPoints);
-	pair<Point, Point> closest_points_strip(Point* strip, int numPoints, float currMinDist);
-	
-	pair<int, int> _shortest_idxs;
-	pair<int, int> _strip_idxs;
-	pair<Point, Point> _shortest;
-	stack<pair<int, int>> _idx_stack;
+	float closest_points_recursive(Point* points, int numPoints);
+	float closest_points_strip(Point* strip, int numPoints, float currMinDist);
+
+	pair<Point, Point> _shortest_points;
+	float _shortest_distance;
 	int _num_calculations;
 	int _num_points;
 	Point* _points;

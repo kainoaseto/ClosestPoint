@@ -29,14 +29,13 @@ DivideAndConquer::DivideAndConquer(int numPoints, Point* points)
 	_num_points = numPoints;
 	_points = GetPoints();
 	_num_calculations = 0;
+	_shortest_distance = FLT_MAX;
 }
 
 void DivideAndConquer::PrintResults()
 {
 	ClosestPointsAlgo::PrintResults();
 	cout << "#########################################################################" << endl;
-	cout << "P" << _shortest.first.idx << " [" << _shortest.first.x << ", " << _shortest.first.y << "]" << endl;
-	cout << "P" << _shortest.second.idx << " [" << _shortest.second.x << ", " << _shortest.second.y << "]" << endl;
 }
 
 void DivideAndConquer::CalculateClosestPoints()
@@ -46,22 +45,25 @@ void DivideAndConquer::CalculateClosestPoints()
 
 	qsort(_points, _num_points, sizeof(Point), compare_x);
 
-	_shortest = closest_points_recursive(_points, _num_points);
-
-	SetShortestDistance(_shortest.first.distance(&_shortest.second));
+	SetShortestDistance(closest_points_recursive(_points, _num_points));
 	SetNumCalculations(_num_calculations);
-	SetShortestPointIdxs(_shortest_idxs);
+	SetShortestPoints(_shortest_points);
 }
 
 // Recurses through the array of points to find the smallest distance
-pair<Point, Point> DivideAndConquer::closest_points_recursive(Point* points, int numPoints)
+float DivideAndConquer::closest_points_recursive(Point* points, int numPoints)
 {
 	if (numPoints <= 3)
 	{
 		BruteForce bf(numPoints, points);
 		bf.CalculateClosestPoints();
 		_num_calculations += bf.GetNumCalculations();
-		return bf.GetShortestRelativePoints();
+		if (bf.GetShortestDistance() < _shortest_distance)
+		{
+			_shortest_points = bf.GetShortestRelativePoints();
+			_shortest_distance = bf.GetShortestDistance();
+		}
+		return bf.GetShortestDistance();
 	}
 
 	int mid = numPoints / 2;
@@ -71,14 +73,10 @@ pair<Point, Point> DivideAndConquer::closest_points_recursive(Point* points, int
 		Calculates the smallest distance on the left side of the midpoint and
 		the smallest distance on the right side of the midpoint.
 	*/
-	pair<Point, Point> leftPts = closest_points_recursive(points, mid);
-	pair<Point, Point> rightPts = closest_points_recursive(points + mid, numPoints - mid);
-	float distLeftMid = leftPts.first.distance(&leftPts.second);
-	float distRightMid = rightPts.first.distance(&rightPts.second);
+	float distLeftMid = closest_points_recursive(points, mid);
+	float distRightMid = closest_points_recursive(points + mid, numPoints-mid);
 
 	float smallestLRDist = min(distLeftMid, distRightMid);
-	
-
 	/*
 		That will get all the points that are on either side of the midpoint but everything
 		that is within that or the midpoint line will be ignored until we go through those points
@@ -101,21 +99,7 @@ pair<Point, Point> DivideAndConquer::closest_points_recursive(Point* points, int
 		between those and compare it to the smallest distance we found earlier on the left
 		and right sides of the midpoint and choose whichever one is smallest.
 	*/
-	pair<Point, Point> stripPts = closest_points_strip(strip, numPointsOnMid, smallestLRDist);
-	float dist = stripPts.first.distance(&stripPts.second);
-	float finalMin = min(smallestLRDist, dist);
-	
-
-	if (finalMin < smallestLRDist)
-	{
-		return stripPts;
-	}
-	else
-	{
-		if (distLeftMid > distRightMid)
-			return rightPts;
-		return leftPts;
-	}
+	return min(smallestLRDist, closest_points_strip(strip, numPointsOnMid, smallestLRDist));
 }	
 
 /*
@@ -124,12 +108,11 @@ pair<Point, Point> DivideAndConquer::closest_points_recursive(Point* points, int
 	the points. Then we just need to check point distances until we have gone through all the points that are in the
 	strip which could be at worst every point. So this will be an N operation where N is the number of points total.
 */
-pair<Point, Point> DivideAndConquer::closest_points_strip(Point* strip, int numPoints, float currMinDist)
+float DivideAndConquer::closest_points_strip(Point* strip, int numPoints, float currMinDist)
 {
 	float stripMinDist = currMinDist;
-	unsigned int len = _idx_stack.size();
 	qsort(strip, numPoints, sizeof(Point), compare_y);
-	pair<Point, Point> stripMinPts;
+
 	for (int i = 0; i < numPoints; ++i)
 	{
 		for (int j = i + 1; j < numPoints && (strip[j].y - strip[i].y) < stripMinDist; ++j)
@@ -138,16 +121,15 @@ pair<Point, Point> DivideAndConquer::closest_points_strip(Point* strip, int numP
 			if (strip[i].distance(&strip[j]) < stripMinDist)
 			{
 				stripMinDist = strip[i].distance(&strip[j]);
-				stripMinPts = make_pair(strip[i], strip[j]);
-				
-				// We found a new small point so add it to our stack and get rid of the old one
-			    /*if(_idx_stack.size() > len)
-					_idx_stack.pop();
-				_idx_stack.push(make_pair(strip[i].idx, strip[j].idx));*/
+				if (stripMinDist < _shortest_distance)
+				{
+					_shortest_points = make_pair(strip[i], strip[j]);
+					_shortest_distance = stripMinDist;
+				}
 			}
 		}
 	}
 	
 	delete[] strip;
-	return stripMinPts;
+	return stripMinDist;
 }

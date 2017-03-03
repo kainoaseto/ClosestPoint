@@ -71,11 +71,11 @@ public:
 	void SetShortestDistance(float shorestDistance)		{ _shortest_distance = shorestDistance; }
 	float GetShortestDistance()							{ return _shortest_distance; }
 
-	void SetShortestPointIdxs(pair<int, int> pointIdxs) { _shortest_distance_point_idxs = pointIdxs; }
-	pair<int, int> GetShortestPointIdxs()				{ return _shortest_distance_point_idxs; }
-
 	void SetName(string name)							{ _name = name; }
 	string GetName()									{ return _name; }
+
+	void SetShortestPoints(pair<Point, Point> points)   { _shortest_points = points; }
+
 
 private:
 	void generate_random_points(int numPoints);
@@ -84,7 +84,7 @@ private:
 	int _num_points;
 	float _shortest_distance;
 
-	pair<int, int> _shortest_distance_point_idxs;
+	pair<Point, Point> _shortest_points;
 
 	string _name;
 	Point* _points;

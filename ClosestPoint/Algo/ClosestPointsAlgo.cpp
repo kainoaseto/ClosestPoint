@@ -20,13 +20,13 @@ ClosestPointsAlgo::ClosestPointsAlgo(int numPoints, Point* points)
 
 void ClosestPointsAlgo::PrintResults()
 {
-	Point firstPoint = _points[_shortest_distance_point_idxs.first];
-	Point secondPoint = _points[_shortest_distance_point_idxs.second];
+	Point firstPoint = _shortest_points.first;
+	Point secondPoint = _shortest_points.second;
 	cout << _name << endl;
 	cout << "The smallest distance is " << _shortest_distance
-		<< " --> " << "P" << _shortest_distance_point_idxs.first
+		<< " --> " << "P" << firstPoint.idx
 		<< "[" << firstPoint.x << "," << firstPoint.y << "]" << " : "
-		<< "P" << _shortest_distance_point_idxs.second
+		<< "P" << secondPoint.idx
 		<< "[" << secondPoint.x << "," << secondPoint.y << "]" << endl;
 
 	cout << " -->\t" << _num_calculations << " point-to-point distance calculations" << endl;
